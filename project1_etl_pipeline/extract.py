@@ -1,21 +1,16 @@
 import requests
 from pprint import pprint
 import json
+from tqdm import tqdm
+import time
 
-
-r = requests.get('https://randomuser.me/api/')
-
-print("Status code: ", r.status_code)
-print(type(r.json()))
-
-user_json = r.json() #dict
-
+RANDOMUSER_API_URL = "https://randomuser.me/api/"
 
 
 
 def parse_json(user_json: dict) -> dict:
     # Extract ID
-    id = user_json["results"][0]["id"]["name"] + " " + user_json["results"][0]["id"]["value"]
+    id = user_json["results"][0]["id"]["name"] + " " + str(user_json["results"][0]["id"]["value"])
     
     # Extract name details
     first_name = user_json["results"][0]["name"]["first"]
@@ -76,15 +71,40 @@ def parse_json(user_json: dict) -> dict:
     }
 
 
-pprint(parse_json(user_json))
+
+def fetch_user_from_api(url : str):
+    
+    r = requests.get(url=url)
+    user_json = r.json()
+    
+    parsed_user = parse_json(user_json)
+    
+    return parsed_user
 
 
-# pprint(user_json)
+def load_batch_data(result_path : str, n_users : int):
+    
+    print(f"Collecting data from {RANDOMUSER_API_URL}; n_users = {n_users}")
+    
+    users = []
+    
+    for i in tqdm(range(n_users), desc="Fetching users from API..."):
+        
+        user = fetch_user_from_api(url=RANDOMUSER_API_URL)
+        users.append(user)
+        
+    
+    #save users to file
+    batch_data = {"n_users" : n_users,
+                  "users" : users}
+    
+    print("Saving users to file ", result_path)
+    with open(result_path, "w") as file:
+        json.dump(batch_data, file, indent=2, ensure_ascii=False)
+        
+        
+    print("JOB DONE")
 
-# with open("example.json", "w") as f:
-#     json.dump(user_json, f, indent=4)
 
-# print("============================")
-# print("Email: ", user_json["results"][0]["email"])
-# print("Gender: ", user_json["results"][0]["gender"])
-# print("Phonenumber: ", user_json["results"][0]["cell"])
+
+load_batch_data(result_path="batch10.json", n_users=10)
