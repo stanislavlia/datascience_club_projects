@@ -1,67 +1,90 @@
-
-import os
-import click
 import requests
-import logging
-import tqdm
-import datetime
-import json
 from pprint import pprint
-
-# TODO
-# 1) Use click
-# 2) Make api calls Asynchronous
+import json
 
 
+r = requests.get('https://randomuser.me/api/')
 
-SOURCE_API_URL="https://randomuser.me/api/"
-FETCH_N_DOCS=10
-RETRIEVED_DATA_DIR="./data/"
+print("Status code: ", r.status_code)
+print(type(r.json()))
 
-def fetch_user_from_api(url : str, timeout : int = 1):
+user_json = r.json() #dict
+
+
+
+
+def parse_json(user_json: dict) -> dict:
+    # Extract ID
+    id = user_json["results"][0]["id"]["name"] + " " + user_json["results"][0]["id"]["value"]
     
-    user = requests.get(url=url,
-                        timeout=timeout,
-                        headers={"Authorization" : "Bearer <some_token>"})
+    # Extract name details
+    first_name = user_json["results"][0]["name"]["first"]
+    last_name = user_json["results"][0]["name"]["last"]
     
-    user_json = user.json()
-    logging.info(f"Status code of request: {user.status_code}")
+    # Extract location details
+    location_city = user_json["results"][0]["location"]["city"]
+    location_country = user_json["results"][0]["location"]["country"]
+    location_latitude = user_json["results"][0]["location"]["coordinates"]["latitude"]
+    location_longitude = user_json["results"][0]["location"]["coordinates"]["longitude"]
+    location_postcode = user_json["results"][0]["location"]["postcode"]
+    location_state = user_json["results"][0]["location"]["state"]
+    location_street_info = f"{user_json['results'][0]['location']['street']['name']}, {user_json['results'][0]['location']['street']['number']}"
     
-    return user_json
-
-
-def fetch_batch(url : str, number_of_users : int):
+    # Extract other fields
+    email = user_json["results"][0].get("email")
+    gender = user_json["results"][0].get("gender")
     
-    collected_users = []
-
-    for _ in tqdm.tqdm(range(number_of_users), desc=f"Fetching {number_of_users} from API..."):
-        
-        user = fetch_user_from_api(url=url,
-                                   timeout=5)
-        
-        collected_users.append(user)
+    # Extract login details
+    login_uuid = user_json["results"][0]["login"].get("uuid")
+    login_username = user_json["results"][0]["login"].get("username")
+    login_password = user_json["results"][0]["login"].get("password")
     
+    # Extract contact details
+    phone = user_json["results"][0].get("phone")
+    cell = user_json["results"][0].get("cell")
     
-    return collected_users
-
-
-def load_batch_to_json(users, filepath):
+    # Extract date of birth and registration details
+    date_of_birth = user_json["results"][0]["dob"].get("date")
+    age = user_json["results"][0]["dob"].get("age")
+    date_of_registration = user_json["results"][0]["registered"].get("date")
     
-    batch = {
-        "users_list": users,
-        "number_users": len(users),
-        "batch_proccessed_ts": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Human-readable timestamp
+    # Extract picture link
+    photo_link = user_json["results"][0]["picture"].get("large")
+    
+    return {
+        "id": id,
+        "firstname": first_name,
+        "lastname": last_name,
+        "location_city": location_city,
+        "location_country": location_country,
+        "location_state": location_state,
+        "location_latitude": location_latitude,
+        "location_longitude": location_longitude,
+        "location_postcode": location_postcode,
+        "location_street_info": location_street_info,
+        "email": email,
+        "gender": gender,
+        "login_uuid": login_uuid,
+        "login_username": login_username,
+        "login_password": login_password,
+        "phone": phone,
+        "cell": cell,
+        "date_of_birth": date_of_birth,
+        "age": age,
+        "date_of_registration": date_of_registration,
+        "photo_link": photo_link
     }
 
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(batch, f, ensure_ascii=False, indent=4)
 
-    print(f"Successfully saved {len(users)} users to {filepath}")
+pprint(parse_json(user_json))
 
 
+# pprint(user_json)
 
-if __name__ == "__main__":
-    
-    users = fetch_batch(url=SOURCE_API_URL, number_of_users=100)
-    
-    load_batch_to_json(users=users, filepath="./data/users_batch1.json")
+# with open("example.json", "w") as f:
+#     json.dump(user_json, f, indent=4)
+
+# print("============================")
+# print("Email: ", user_json["results"][0]["email"])
+# print("Gender: ", user_json["results"][0]["gender"])
+# print("Phonenumber: ", user_json["results"][0]["cell"])

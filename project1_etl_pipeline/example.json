@@ -1,0 +1,66 @@
+{
+    "results": [
+        {
+            "gender": "male",
+            "name": {
+                "title": "Mr",
+                "first": "Eduardo",
+                "last": "L\u00f3pez"
+            },
+            "location": {
+                "street": {
+                    "number": 7309,
+                    "name": "Avenida de Castilla"
+                },
+                "city": "Ciudad Real",
+                "state": "Castilla la Mancha",
+                "country": "Spain",
+                "postcode": 53007,
+                "coordinates": {
+                    "latitude": "-32.7782",
+                    "longitude": "-31.9133"
+                },
+                "timezone": {
+                    "offset": "-12:00",
+                    "description": "Eniwetok, Kwajalein"
+                }
+            },
+            "email": "eduardo.lopez@example.com",
+            "login": {
+                "uuid": "470b1357-c806-47f1-9b83-b992ab813095",
+                "username": "orangeduck730",
+                "password": "poopy",
+                "salt": "XIayE0hw",
+                "md5": "3b446ebcf954ed7ef2ab3225a5885f76",
+                "sha1": "7b7e70532bf640c8c1ce7cc089502ea3f13c71c2",
+                "sha256": "36be85a74b3a5a2c727cf757fda54d8f3f5d7d1b99d7bdf1372f34cf0ef8f782"
+            },
+            "dob": {
+                "date": "1979-02-07T20:31:05.251Z",
+                "age": 45
+            },
+            "registered": {
+                "date": "2014-10-26T10:31:09.392Z",
+                "age": 9
+            },
+            "phone": "966-502-053",
+            "cell": "666-356-781",
+            "id": {
+                "name": "DNI",
+                "value": "14283269-U"
+            },
+            "picture": {
+                "large": "https://randomuser.me/api/portraits/men/13.jpg",
+                "medium": "https://randomuser.me/api/portraits/med/men/13.jpg",
+                "thumbnail": "https://randomuser.me/api/portraits/thumb/men/13.jpg"
+            },
+            "nat": "ES"
+        }
+    ],
+    "info": {
+        "seed": "69bf613f1e7d4f29",
+        "results": 1,
+        "page": 1,
+        "version": "1.4"
+    }
+}
