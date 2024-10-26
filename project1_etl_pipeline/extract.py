@@ -3,6 +3,7 @@ from pprint import pprint
 import json
 from tqdm import tqdm
 import time
+import click
 
 RANDOMUSER_API_URL = "https://randomuser.me/api/"
 
@@ -107,4 +108,17 @@ def load_batch_data(result_path : str, n_users : int):
 
 
 
-load_batch_data(result_path="batch10.json", n_users=10)
+@click.command()
+@click.option('--result_path', type=str, help='Path to save loaded batch of users')
+@click.option('--n_users', type=int, help='How many users to fetch from API')
+def load_batch_cli(result_path: str, n_users: int):
+    
+    load_batch_data(result_path=result_path,
+                    n_users=n_users)
+    
+
+load_batch_cli()
+
+#How to use
+#python3 extract.py --result_path batch100users.json --n_users 100
+#python3 extract.py --result_path batch15users.json --n_users 15
