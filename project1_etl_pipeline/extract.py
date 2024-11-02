@@ -3,6 +3,7 @@ from pprint import pprint
 import json
 from tqdm import tqdm
 import time
+from datetime import datetime
 import click
 
 RANDOMUSER_API_URL = "https://randomuser.me/api/"
@@ -47,6 +48,8 @@ def parse_json(user_json: dict) -> dict:
     # Extract picture link
     photo_link = user_json["results"][0]["picture"].get("large")
     
+    extract_time = str(datetime.now())
+    
     return {
         "id": id,
         "firstname": first_name,
@@ -68,7 +71,8 @@ def parse_json(user_json: dict) -> dict:
         "date_of_birth": date_of_birth,
         "age": age,
         "date_of_registration": date_of_registration,
-        "photo_link": photo_link
+        "photo_link": photo_link,
+        "extract_time" : extract_time
     }
 
 
